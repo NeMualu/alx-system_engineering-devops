@@ -1,5 +1,2 @@
 #!/usr/bin/env ruby
-input_argument = ARGV[0]
-result = input_argument.scan(/School/).join
-puts result
-
+puts ARGV[0].scan(/School/).join
