@@ -4,11 +4,8 @@
 #   - facebook.com resolves to 8.8.8.8
 
 # Copy the current hosts file to a new file
-cp /etc/hosts ~/hosts.new
-
-# Update the new hosts file with the desired configurations
-sed -i 's/127.*$/127.0.0.2 localhost\n8.8.8.8 facebook.com/' ~/hosts.new
-
-# Replace the system's hosts file with the updated version
-cp -f ~/hosts.new /etc/hosts
-
+# Server configuration
+sudo cp /etc/hosts ~/hosts.new
+sudo sed -i 's/127.0.0.1/127.0.0.2/' ~/hosts.new
+echo "8.8.8.8   facebook.com" >> ~/hosts.new
+sudo cp -f ~/hosts.new /etc/hosts
