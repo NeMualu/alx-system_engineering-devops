@@ -1,9 +1,36 @@
 #!/usr/bin/env bash
 # Script that configures a new Ubuntu machine to respect above requirements
 
+# Install nginx
 apt-get update
 apt-get install -y nginx
 
-echo "Hello World!" | sudo tee /var/www/html/index.html
+# Start nginx
+service nginx start
 
-service nginx restart
+# Create a custom HTML page containing "Hello World!"
+echo "Hello World!" > /var/www/html/index.html
+
+# Check if nginx is running
+nginx_pid=$(pgrep nginx)
+if [ -z "$nginx_pid" ]; then
+    echo "Nginx failed to start"
+    exit 1
+fi
+
+# Check if nginx is listening on port 80
+netstat -tuln | grep ':80' > /dev/null
+if [ "$?" -ne 0 ]; then
+    echo "Nginx is not listening on port 80"
+    exit 1
+fi
+
+# Check if nginx returns "Hello World!" when queried at root /
+curl -s localhost | grep "Hello World!" > /dev/null
+if [ "$?" -ne 0 ]; then
+    echo "Nginx did not return 'Hello World!'"
+    exit 1
+fi
+
+# Success message
+echo "Nginx installed and configured successfully"
