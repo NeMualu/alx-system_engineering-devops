@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Script that configures a new Ubuntu machine to respect above requirements
-
 # Install nginx
 apt-get update
 apt-get install -y nginx
@@ -33,8 +32,8 @@ if [ "$?" -ne 0 ]; then
 fi
 
 # Check if nginx returns HTTP 200 when queried at root /
-curl -s -o /dev/null -w "%{http_code}" localhost | grep "200" > /dev/null
-if [ "$?" -ne 0 ]; then
+status_code=$(curl -s -o /dev/null -w "%{http_code}" localhost)
+if [ "$status_code" -ne 200 ]; then
     echo "Nginx did not return HTTP 200"
     exit 1
 fi
