@@ -32,5 +32,13 @@ if [ "$?" -ne 0 ]; then
     exit 1
 fi
 
+# Check if nginx returns HTTP 200 when queried at root /
+curl -s -o /dev/null -w "%{http_code}" localhost | grep "200" > /dev/null
+if [ "$?" -ne 0 ]; then
+    echo "Nginx did not return HTTP 200"
+    exit 1
+fi
+
 # Success message
 echo "Nginx installed and configured successfully"
+
