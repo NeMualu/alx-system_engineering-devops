@@ -1,30 +1,15 @@
 #!/usr/bin/env bash
-# Install Apache
-sudo apt-get update
-sudo apt-get install -y apache2
+# Configure Nginx so that its HTTP response contains a custom header
+# HTTP response contains a custom header (on web-01 and web-02)
+var=$(hostname)
+new_string="error_page 404 \/custom_404.html;\n location \/redirect_me {\n return 301 \$scheme:\/\/www.google.com;"
+new_string2="server {\n\tadd_header X-Served-By $var;"
 
-# Create a custom configuration file for Apache
-echo 'Header add X-Served-By "web-01"' | sudo tee /etc/apache2/conf-available/custom-header.conf
-
-# Enable the custom configuration
-sudo a2enconf custom-header
-
-# Restart Apache to apply changes
-sudo systemctl restart apache2
-
-# Check if the custom header is being returned by web-01
-response=$(curl -sI localhost | grep -i 'X-Served-By')
-if [[ $response == *"web-01"* ]]; then
-    echo "Custom X-Served-By header is being returned by web-01 server."
-else
-    echo "Custom X-Served-By header is not being returned by web-01 server."
-fi
-
-# Check if the custom header is being returned by web-02
-response=$(curl -sI localhost | grep -i 'X-Served-By')
-if [[ $response == *"web-02"* ]]; then
-    echo "Custom X-Served-By header is being returned by web-02 server."
-else
-    echo "Custom X-Served-By header is not being returned by web-02 server."
-fi
-
+apt-get update -y
+apt-get install nginx -y
+echo "Hello World!" > /usr/share/nginx/html/index.html
+mkdir -p /var/www/html
+echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
+sudo sed -i -E "s/^[^#]+location \/ \{/$new_string/" /etc/nginx/sites-available/default
+sudo sed -i -E "s/^server \{/$new_string2/" /etc/nginx/sites-available/default
+sudo service nginx start
