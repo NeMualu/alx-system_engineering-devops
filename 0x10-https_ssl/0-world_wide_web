@@ -1,16 +1,36 @@
 #!/usr/bin/env bash
-# Bash script that will display information about subdomains
-domain () {
-if [ "$2" ];
-then
-    echo -n "The subdomain $2 is a"
-    dig "$2.$1" | grep -A1 'ANSWER SECTION:' | awk '{print " " $4 " record and points to " $5}' | tail -n 1
-else
-    for i in www lb-01 web-01 web-02
-    do
-        echo -n "The subdomain $i is a"
-        dig "$i.$1" | grep -A1 'ANSWER SECTION:' | awk '{print " " $4 " record and points to " $5}' | tail -n 1
-    done
-fi
+# Bash script that displays information about subdomains
+
+domain() {
+    if [ "$2" ]; then
+        echo -n "The subdomain $2 is a"
+        dig_result=$(dig "$2.$1" +short)
+        if [ -n "$dig_result" ]; then
+            echo " A record and points to $dig_result"
+        else
+            echo " No record found."
+        fi
+    else
+        subdomains=("www" "lb-01" "web-01" "web-02")
+        for sub in "${subdomains[@]}"; do
+            echo -n "The subdomain $sub is a"
+            dig_result=$(dig "$sub.$1" +short)
+            if [ -n "$dig_result" ]; then
+                echo " A record and points to $dig_result"
+            else
+                echo " No record found."
+            fi
+        done
+    fi
 }
-domain "$1" "$2"
+
+# Main script starts here
+if [ "$#" -eq 1 ]; then
+    domain "$1"
+elif [ "$#" -eq 2 ]; then
+    domain "$1" "$2"
+else
+    echo "Usage: $0 domain [subdomain]"
+    exit 1
+fi
+
