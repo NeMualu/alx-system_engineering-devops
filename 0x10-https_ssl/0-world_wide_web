@@ -1,36 +1,48 @@
 #!/usr/bin/env bash
 # Bash script that displays information about subdomains
 
+# Function to check if a subdomain points to the specified IP
+check_subdomain_ip() {
+    local subdomain="$1"
+    local expected_ip="$2"
+    local domain="$3"
+    local actual_ip
+    actual_ip=$(dig +short "$subdomain.$domain" | tail -n1)
+    if [ "$actual_ip" == "$expected_ip" ]; then
+        echo "✓ The subdomain $subdomain points to the correct IP: $expected_ip"
+    else
+        echo "✗ The subdomain $subdomain does not point to the correct IP."
+    fi
+}
+
+# Function to display information about subdomains
 domain() {
-    if [ "$2" ]; then
-        echo -n "The subdomain $2 is a"
-        dig_result=$(dig "$2.$1" +short)
+    local domain="$1"
+    local subdomains=("www" "lb-01" "web-01" "web-02")
+    
+    for sub in "${subdomains[@]}"; do
+        echo -n "The subdomain $sub is a"
+        local dig_result
+        dig_result=$(dig "$sub.$domain" +short)
         if [ -n "$dig_result" ]; then
             echo " A record and points to $dig_result"
         else
-            echo " No record found."
+            echo " No A record found."
         fi
-    else
-        subdomains=("www" "lb-01" "web-01" "web-02")
-        for sub in "${subdomains[@]}"; do
-            echo -n "The subdomain $sub is a"
-            dig_result=$(dig "$sub.$1" +short)
-            if [ -n "$dig_result" ]; then
-                echo " A record and points to $dig_result"
-            else
-                echo " No record found."
-            fi
-        done
-    fi
+    done
+
+    echo ""
+    # Check subdomain IPs
+    check_subdomain_ip "www" "lb-01_IP" "$domain"
+    check_subdomain_ip "web-01" "web-01_IP" "$domain"
+    check_subdomain_ip "web-02" "web-02_IP" "$domain"
 }
 
 # Main script starts here
 if [ "$#" -eq 1 ]; then
     domain "$1"
-elif [ "$#" -eq 2 ]; then
-    domain "$1" "$2"
 else
-    echo "Usage: $0 domain [subdomain]"
+    echo "Usage: $0 domain"
     exit 1
 fi
 
