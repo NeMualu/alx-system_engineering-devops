@@ -52,12 +52,4 @@ frontend www-http
     default_backend web-backend
 
 frontend www-https
-    bind :443 ssl crt /etc/haproxy/certs/lb-01.mahi-uha.tech.pem
-    reqadd X-Forwarded-Proto:\ https
-    default_backend web-backend
-
-backend web-backend
-    redirect scheme https if !{ ssl_fc }
-    server 971-web-01 35.227.5.245:80 check
-    server 971-web-02 3.236.14.41:80 check
-
+    bind :443 ssl
