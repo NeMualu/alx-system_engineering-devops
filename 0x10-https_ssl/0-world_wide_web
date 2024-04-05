@@ -2,20 +2,36 @@
 # Function to display information about subdomains
 display_subdomain_info() {
     local domain="$1"
-    local subdomain="$2"
-
-    if [ -z "$subdomain" ]; then
-        subdomains=("www" "lb-01" "web-01" "web-02")
-    else
-        subdomains=("$subdomain")
-    fi
+    local subdomains=("www" "lb-01" "web-01" "web-02")
 
     for sub in "${subdomains[@]}"; do
         echo -n "The subdomain $sub is a"
         dig_result=$(dig "$sub.$domain" | awk '/ANSWER SECTION/ {getline; print}')
         record_type=$(echo "$dig_result" | awk '{print $4}')
         destination=$(echo "$dig_result" | awk '{print $5}')
-        echo " $record_type record and points to $destination"
+
+        # Check if subdomain matches any of the specific subdomains
+        case "$sub" in
+            "www")
+                expected_ip="54.210.47.110"
+                ;;
+            "lb-01")
+                expected_ip="54.210.47.110"
+                ;;
+            "web-01")
+                expected_ip="34.198.248.145"
+                ;;
+            "web-02")
+                expected_ip="54.89.38.100"
+                ;;
+        esac
+
+        # Compare the destination IP with the expected IP
+        if [ "$destination" == "$expected_ip" ]; then
+            echo " $record_type record and points to $destination"
+        else
+            echo " $record_type record but points to $destination instead of $expected_ip"
+        fi
     done
 }
 
@@ -23,11 +39,7 @@ display_subdomain_info() {
 if [ "$#" -eq 1 ]; then
     domain="$1"
     display_subdomain_info "$domain"
-elif [ "$#" -eq 2 ]; then
-    domain="$1"
-    subdomain="$2"
-    display_subdomain_info "$domain" "$subdomain"
 else
-    echo "Usage: $0 domain [subdomain]"
+    echo "Usage: $0 domain"
     exit 1
 fi
