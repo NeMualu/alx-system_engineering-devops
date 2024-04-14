@@ -10,7 +10,7 @@ A way to easily assess this is to simply ask an engineer to explain how a softwa
 \
 Let’s practice by exploring the infrastructure side (network, servers, security…) of the question.\
 \
-\
+
 ## **Requirements**
 ### **General**
 You can post your blog post on the platform of your choice, LinkedIn or Medium are good ones
