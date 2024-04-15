@@ -1,13 +1,13 @@
-sudo apt-get install ufw
-sudo ufw status
-sudo ufw enable
-sudo vim /etc/default/ufw
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw app list
-sudo ufw allow ssh
-sudo ufw allow 22/tcp
-sudo ufw allow http
-sudo ufw allow 80/tcp
-sudo ufw allow https
-sudo ufw allow 443/tcp
+sudo apt-get install ufw     # Install UFW if not already installed
+sudo ufw status              # Check UFW status
+sudo ufw enable              # Enable UFW
+sudo vim /etc/default/ufw    # Edit UFW default configuration
+sudo ufw default deny incoming   # Set default incoming policy to deny
+sudo ufw default allow outgoing  # Set default outgoing policy to allow
+sudo ufw app list                # List available UFW application profiles
+sudo ufw allow ssh               # Allow SSH (port 22)
+sudo ufw allow 22/tcp            # Allow TCP on port 22
+sudo ufw allow http              # Allow HTTP (port 80)
+sudo ufw allow 80/tcp            # Allow TCP on port 80
+sudo ufw allow https             # Allow HTTPS (port 443)
+sudo ufw allow 443/tcp           # Allow TCP on port 443
