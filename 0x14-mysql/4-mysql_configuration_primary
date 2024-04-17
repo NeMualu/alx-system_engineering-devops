@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # The MySQL database server configuration file.
 
 [mysqld_safe]
