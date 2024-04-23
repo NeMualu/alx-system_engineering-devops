@@ -3,7 +3,6 @@
 Script that utilizes a REST API to retrieve progress information
 for a given employee's TODO list and exports the data in JSON format.
 """
-
 import json
 import requests
 from sys import argv
@@ -12,8 +11,8 @@ if __name__ == "__main__":
     sessionReq = requests.Session()
 
     idEmp = argv[1]
-    idURL = 'https://jsonplaceholder.typicode.com/users/{}/todos'.format(idEmp)
-    nameURL = 'https://jsonplaceholder.typicode.com/users/{}'.format(idEmp)
+    idURL = f'https://jsonplaceholder.typicode.com/users/{idEmp}/todos'
+    nameURL = f'https://jsonplaceholder.typicode.com/users/{idEmp}'
 
     employee = sessionReq.get(idURL)
     employeeName = sessionReq.get(nameURL)
@@ -24,16 +23,16 @@ if __name__ == "__main__":
     totalTasks = []
     updateUser = {}
 
-    for all_Emp in json_req:
+    for task in json_req:
         totalTasks.append(
             {
-                "task": all_Emp.get('title'),
-                "completed": all_Emp.get('completed'),
+                "task": task.get('title'),
+                "completed": task.get('completed'),
                 "username": usr,
             })
     updateUser[idEmp] = totalTasks
 
-    file_Json = idEmp + ".json"
+    file_Json = f'{idEmp}.json'
     with open(file_Json, 'w') as f:
         json.dump(updateUser, f)
 

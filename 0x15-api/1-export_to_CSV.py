@@ -13,8 +13,8 @@ if __name__ == "__main__":
     sessionReq = requests.Session()
 
     idEmp = argv[1]
-    idURL = 'https://jsonplaceholder.typicode.com/users/{}/todos'.format(idEmp)
-    nameURL = 'https://jsonplaceholder.typicode.com/users/{}'.format(idEmp)
+    idURL = f'https://jsonplaceholder.typicode.com/users/{idEmp}/todos'
+    nameURL = f'https://jsonplaceholder.typicode.com/users/{idEmp}'
 
     employee = sessionReq.get(idURL)
     employeeName = sessionReq.get(nameURL)
@@ -22,16 +22,12 @@ if __name__ == "__main__":
     json_req = employee.json()
     usr = employeeName.json()['username']
 
-    totalTasks = 0
+    totalTasks = sum(1 for task in json_req if task['completed'])
 
-    for done_tasks in json_req:
-        if done_tasks['completed']:
-            totalTasks += 1
-
-    fileCSV = idEmp + '.csv'
+    fileCSV = f'{idEmp}.csv'
 
     with open(fileCSV, "w", newline='') as csvfile:
         csv_writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_ALL)
-        for i in json_req:
-            csv_writer.writerow([idEmp, usr, i.get('completed'), i.get('title')])
+        for task in json_req:
+            csv_writer.writerow([idEmp, usr, task['completed'], task['title']])
 

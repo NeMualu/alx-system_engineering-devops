@@ -3,7 +3,6 @@
 Script that uses a REST API to fetch information about employees' TODO list progress
 and exports the data in JSON format.
 """
-
 import json
 import requests
 
