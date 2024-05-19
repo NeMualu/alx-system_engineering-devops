@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Changes the port configuration in Nginx from 8080 to 80 and restarts the Nginx service
 
+# Update package list and install Nginx if not installed
+sudo apt-get update
+sudo apt-get install -y nginx
+
 # Update Nginx configuration to change port 8080 to 80
 sudo sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
 sudo sed -i 's/listen \[::\]:80 default_server;/listen \[::\]:80;/g' /etc/nginx/sites-available/default
