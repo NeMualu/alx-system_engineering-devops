@@ -1,2 +1,27 @@
+Get:1 http://security.ubuntu.com/ubuntu focal-security InRelease [114 kB]
+Hit:2 http://archive.ubuntu.com/ubuntu focal InRelease
+Hit:3 http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu focal InRelease
+Get:4 http://archive.ubuntu.com/ubuntu focal-updates InRelease [114 kB]
+Hit:5 http://archive.ubuntu.com/ubuntu focal-backports InRelease
+Get:6 http://security.ubuntu.com/ubuntu focal-security/main amd64 Packages [3,672 kB]
+Get:7 http://security.ubuntu.com/ubuntu focal-security/restricted amd64 Packages [3,616 kB]
+Get:8 http://security.ubuntu.com/ubuntu focal-security/universe amd64 Packages [1,207 kB]
+Get:9 http://archive.ubuntu.com/ubuntu focal-updates/restricted amd64 Packages [3,766 kB]
+Get:10 http://archive.ubuntu.com/ubuntu focal-updates/universe amd64 Packages [1,503 kB]
+Get:11 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 Packages [4,147 kB]
+Fetched 18.1 MB in 20s (916 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+nginx is already the newest version (1.18.0-0ubuntu1.4).
+The following packages were automatically installed and are no longer required:
+  libevent-core-2.1-7 libevent-pthreads-2.1-7 libmecab2 libnuma1 mecab-ipadic
+  mecab-ipadic-utf8 mecab-utils
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 18 not upgraded.
  * Restarting nginx nginx
    ...done.
+Synchronizing state of nginx.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable nginx
+Nginx is running and serving HTTP 200 on port 80

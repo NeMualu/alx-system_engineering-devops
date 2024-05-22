@@ -5,17 +5,37 @@
 sudo apt-get update
 sudo apt-get install -y nginx
 
-# Update Nginx configuration to change port 8080 to 80
-if grep -q '8080' /etc/nginx/sites-available/default; then
-  sudo sed -i 's/8080/80/g' /etc/nginx/sites-available/default
-  sudo sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
-fi
+# Function to update Nginx configuration
+update_nginx_config() {
+  local config_file=$1
+  if grep -q '8080' "$config_file"; then
+    sudo sed -i 's/8080/80/g' "$config_file"
+  fi
+  if grep -q 'listen \[::\]:80 default_server;' "$config_file"; then
+    sudo sed -i 's/listen \[::\]:80 default_server;/listen \[::\]:80;/g' "$config_file"
+  fi
+}
+
+# Update Nginx configuration in both sites-available and sites-enabled
+update_nginx_config /etc/nginx/sites-available/default
+update_nginx_config /etc/nginx/sites-enabled/default
+
+# Check Nginx configuration syntax before restarting
+sudo nginx -t
 
 # Restart Nginx service to apply changes
-sudo service nginx restart
+if sudo systemctl restart nginx; then
+  echo "Nginx restarted successfully"
+else
+  echo "Failed to restart Nginx. Exiting."
+  exit 1
+fi
 
 # Enable Nginx to start on boot
 sudo systemctl enable nginx
+
+# Wait a few seconds for Nginx to fully start
+sleep 5
 
 # Check if Nginx is running and listening on port 80
 for i in {1..5}; do
