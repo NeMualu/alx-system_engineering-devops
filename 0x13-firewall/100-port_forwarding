@@ -1,4 +1,5 @@
 # Default policies
+#This code is to forward port 80 to 8080
 DEFAULT_INPUT_POLICY="DROP"
 DEFAULT_OUTPUT_POLICY="ACCEPT"
 
